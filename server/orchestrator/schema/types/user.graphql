@@ -1,0 +1,60 @@
+type User {
+  _id: ID
+  name: String
+  email: String
+  phoneNumber: String
+  dateOfBirth: String
+  address: String
+  role: String
+  createdAt: String
+  updatedAt: String
+}
+
+type LoginResponse {
+  access_token: String
+}
+
+input LoginUser {
+  email: String!
+  password: String!
+}
+
+input NewUser {
+  name: String
+  email: String!
+  password: String!
+  phoneNumber: String
+  dateOfBirth: String
+  address: String
+}
+
+input UpdateUser {
+  _id: ID!
+  name: String
+  email: String
+  phoneNumber: String
+  dateOfBirth: String
+  address: String
+}
+
+input UpdateUserRole {
+  _id: ID!
+  role: String!
+}
+
+type Message {
+  code: Int
+  message: String!
+}
+
+type Query {
+  getAllUsers: [User]
+}
+
+type Mutation {
+  registerNewUser(input: NewUser): User
+  loginUser(input: LoginUser): LoginResponse
+  updateUser(input: UpdateUser): User
+  updateUserRole(input: UpdateUserRole): User
+  deleteUserById(_id: ID): Message
+}

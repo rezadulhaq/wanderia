@@ -10,13 +10,50 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Partner.hasMany(models.Business, {
+                foreignKey: "PartnerId",
+                as: "author",
+            });
         }
     }
     Partner.init(
         {
-            name: DataTypes.STRING,
-            email: DataTypes.STRING,
-            password: DataTypes.STRING,
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notNull: {
+                        msg: "partner name is required",
+                    },
+                    notEmpty: {
+                        msg: "partner name is required",
+                    },
+                },
+            },
+            email: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notNull: {
+                        msg: "email is required",
+                    },
+                    notEmpty: {
+                        msg: "email is required",
+                    },
+                },
+            },
+            password: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notNull: {
+                        msg: "password is required",
+                    },
+                    notEmpty: {
+                        msg: "password is required",
+                    },
+                },
+            },
         },
         {
             sequelize,

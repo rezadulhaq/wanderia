@@ -11,9 +11,11 @@ module.exports = {
             },
             name: {
                 type: Sequelize.STRING,
+                allowNull: false
             },
             imageUrl: {
                 type: Sequelize.STRING,
+                allowNull: false
             },
             BusinessId: {
                 type: Sequelize.INTEGER,

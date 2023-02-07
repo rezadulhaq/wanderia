@@ -12,7 +12,7 @@ module.exports = {
          *   isBetaMember: false
          * }], {});
          */
-        const data = require("../data.json").categories.map(function (el) {
+        const data = require("../categories.json").map(function (el) {
             el.createdAt = new Date();
             el.updatedAt = new Date();
             return el;

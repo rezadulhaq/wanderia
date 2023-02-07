@@ -1,21 +1,19 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import React, { useState } from 'react'
 import { Input, Button } from 'react-native-elements'
-import { useNavigation } from '@react-navigation/native'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { auth } from '../../config/firebase'
 
 const RegisterScreen = ({ navigation }) => {
-  const [name, setName] = useState('')
+  const [username, setUsername] = useState('')
   const [imgUrl, setImgUrl] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const navigate = useNavigation()
 
   const handlRegister = () => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        updateProfile(auth.currentUser, { displayName: name, photoURL: imgUrl?imgUrl:`https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.dreamstime.com%2Fdefault-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-image179376714&psig=AOvVaw0HzgEK4IKcyWF_hEDLK7gT&ust=1675411264800000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCNCnsLyv9vwCFQAAAAAdAAAAABAE`})
+      .then(() => {
+        updateProfile(auth.currentUser, { displayName: username, photoURL: imgUrl?imgUrl:`https://icon-library.com/images/default-user-icon/default-user-icon-13.jpg`})
         .then(() => console.log('success register'))
       })
       .catch((error) => alert(error.message));
@@ -26,11 +24,11 @@ const RegisterScreen = ({ navigation }) => {
   return (
     <View className='flex-1 items-center justify-center p-4'>
       <Input 
-        placeholder='Enter your name'
-        label='name'
-        value={name}
-        leftIcon={{ type: 'material', name: 'person' }}
-        onChangeText={(text) => setName(text)}
+        placeholder='Enter your username'
+        label='username'
+        value={username}
+        leftIcon={{ type: 'feather', name: 'at-sign' }}
+        onChangeText={(text) => setUsername(text)}
       />
       <Input 
         placeholder='Enter your photo url'
@@ -55,7 +53,7 @@ const RegisterScreen = ({ navigation }) => {
         secureTextEntry
       />
       <View className='flex-row gap-4'>
-      <Button title='Register' onPress={handlRegister}/>
+        <Button title='Register' onPress={handlRegister}/>
       </View>
     </View>
   )

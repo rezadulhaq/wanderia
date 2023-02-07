@@ -8,30 +8,26 @@ const errorHandlers = (error, req, res, next) => {
       code = 401;
       msg = "Invalid token";
       break;
-    case "SequelizeUniqueConstraintError":
-      code = 400;
-      msg = error.errors[0].message;
-      break;
-    case "SequelizeValidationError":
-      code = 400;
-      msg = error.errors[0].message;
-      break;
-    // custom error from backend
-    case "MissingEmail":
+    // error from custom error messages
+    case "EmailRequired":
       code = 400;
       msg = "Email is required";
       break;
-    case "MissingPassword":
+    case "PasswordRequired":
       code = 400;
-      msg = "Password is Required";
-      break;
-    case "MissingOrInvalidJWT":
-      (code = 401), (msg = "Invalid token");
+      msg = "Password is required";
       break;
     case "InvalidCredentials":
-      console.log("masuk");
       code = 401;
       msg = "Invalid email/password";
+      break;
+    case "InvalidRole":
+      code = 400;
+      msg = "Invalid role";
+      break;
+    case "Unauthorized":
+      code = 403;
+      msg = "Unauthorized";
       break;
     case "Unauthenticated":
       code = 401;
@@ -41,6 +37,11 @@ const errorHandlers = (error, req, res, next) => {
       code = 404;
       msg = "Not found";
       break;
+    case "MongoServerError": {
+      if (error.message.includes("E11000 duplicate key error collection")) {
+        code = 409;
+      }
+    }
     default:
       break;
   }

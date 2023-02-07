@@ -11,6 +11,7 @@ module.exports = {
             },
             name: {
                 type: Sequelize.STRING,
+                allowNull: false,
             },
             latitude: {
                 type: Sequelize.FLOAT,
@@ -20,6 +21,7 @@ module.exports = {
             },
             description: {
                 type: Sequelize.TEXT,
+                allowNull: false,
             },
             mapUrl: {
                 type: Sequelize.STRING,

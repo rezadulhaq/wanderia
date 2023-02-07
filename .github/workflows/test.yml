@@ -3,36 +3,48 @@ name: Test
 on:
   pull_request:
     branches:
+      - main
       - backend/development
 
 jobs:
+  test-orchestrator:
+    environment: TEST
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Install dependencies (user-service)
+        run: npm i
+        working-directory: server/services/user
+      - name: Run microservice (user-service) in background
+        run: nohup node app.js > /dev/null 2>&1 &
+        working-directory: server/services/user
+      - name: Install dependencies (orchestrator)
+        run: npm i
+        working-directory: server/orchestrator
+      - name: Run unit tests using nyc and Mocha
+        run: npm test
+        env:
+          USER_URL: "http://localhost:4001"
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_USERNAME: ${{ secrets.REDIS_USERNAME }}
+        working-directory: server/orchestrator
   test-user:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 18.13
-    - name: Install dependencies
-      run: npm i
-      working-directory: server/user
-    - name: Run unit tests using nyc and Mocha
-      run: npm test -- --reporter=nyc
-      working-directory: server/user
-  test-partner:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 18.13
-    - name: Install dependencies
-      run: npm i
-      working-directory: server/partner
-    - name: Run unit tests using nyc and Mocha
-      run: npm test -- --reporter=nyc
-      working-directory: server/partner
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+      - name: Install dependencies
+        run: npm i
+        working-directory: server/services/user
+      - name: Run unit tests using nyc and Mocha
+        run: npm test
+        working-directory: server/services/user

@@ -9,16 +9,63 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Business.belongsTo(models.Category, {
+                foreignKey: "CategoryId",
+                as: "category",
+            });
+            Business.belongsTo(models.Partner, {
+                foreignKey: "PartnerId",
+                as: "author",
+            });
+            Business.hasMany(models.Post, {
+                foreignKey: "BusinessId",
+                as: "posts",
+            });
         }
     }
     Business.init(
         {
-            name: DataTypes.STRING,
+            // category id valid, name, valid, mapurl valid,
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notNull: {
+                        msg: "Name is Required",
+                    },
+                    notEmpty: {
+                        msg: "Name is Required",
+                    },
+                },
+            },
             latitude: DataTypes.FLOAT,
             longitude: DataTypes.FLOAT,
-            description: DataTypes.TEXT,
-            mapUrl: DataTypes.TEXT,
-            CategoryId: DataTypes.INTEGER,
+            address: {
+                type: DataTypes.TEXT,
+                allowNull: false,
+                validate: {
+                    notNull: {
+                        msg: "Address is Required",
+                    },
+                    notEmpty: {
+                        msg: "Address is Required",
+                    },
+                },
+            },
+            price: { type: DataTypes.STRING, defaultValue: "$" },
+            rating: { type: DataTypes.STRING, defaultValue: "5" },
+            CategoryId: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                validate: {
+                    notNull: {
+                        msg: "Category is Required",
+                    },
+                    notEmpty: {
+                        msg: "Category is Required",
+                    },
+                },
+            },
             PartnerId: DataTypes.INTEGER,
             status: DataTypes.STRING,
             imageUrl: DataTypes.STRING,
@@ -28,27 +75,5 @@ module.exports = (sequelize, DataTypes) => {
             modelName: "Business",
         }
     );
-    Business.beforeCreate(function (business) {
-        let checkLatitude = business.mapUrl.split("/");
-        let check;
-        checkLatitude.map(function (el) {
-            if (el.includes("@")) {
-                check = el.slice(1).split(",");
-            }
-        });
-        business.latitude = check[0];
-        business.longitude = check[1];
-    });
-    Business.beforeUpdate(function (business) {
-        let checkLatitude = business.mapUrl.split("/");
-        let check;
-        checkLatitude.map(function (el) {
-            if (el.includes("@")) {
-                check = el.slice(1).split(",");
-            }
-        });
-        business.latitude = check[0];
-        business.longitude = check[1];
-    });
     return Business;
 };

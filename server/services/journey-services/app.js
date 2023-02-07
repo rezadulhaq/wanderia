@@ -6,7 +6,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const { connectDB } = require("./configs/mongoDb");
-const port =  process.env.PORT || 4001
+const port =  process.env.PORT || 4003
 const router = require('./routes');
 const errorHandler = require("./middlewares/errorHandler");
 

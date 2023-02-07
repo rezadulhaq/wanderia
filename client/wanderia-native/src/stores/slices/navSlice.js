@@ -19,6 +19,8 @@ const initialState = {
         },
     ],
     locationPermission: false,
+    startNavigation: false,
+    selectedRide: null,
 };
 
 export const navSlice = createSlice({
@@ -41,6 +43,12 @@ export const navSlice = createSlice({
         setLocationPermission: (state, actions) => {
             state.locationPermission = actions.payload;
         },
+        setStartNavigation: (state, actions) => {
+            state.startNavigation = actions.payload;
+        },
+        setSelectedRide: (state, actions) => {
+            state.selectedRide = actions.payload;
+        },
     },
 });
 
@@ -50,6 +58,8 @@ export const {
     setTravelTimeInformation,
     setWaypoints,
     setLocationPermission,
+    setStartNavigation,
+    setSelectedRide,
 } = navSlice.actions;
 
 // Selectors
@@ -59,5 +69,7 @@ export const selectTravelTimeInformation = (state) =>
     state.nav.travelTimeInformation;
 export const selectWaypoints = (state) => state.nav.waypoints;
 export const selectLocationPermission = (state) => state.nav.locationPermission;
+export const selectStartNavigation = (state) => state.nav.startNavigation;
+export const selectSelectedRide = (state) => state.nav.selectedRide;
 
 export default navSlice.reducer;

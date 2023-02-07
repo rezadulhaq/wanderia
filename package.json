@@ -1,28 +1,29 @@
 {
-  "name": "wanderia",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
-    "dev": "nodemon app.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ArgeekBrambo/wanderia.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ArgeekBrambo/wanderia/issues"
-  },
-  "homepage": "https://github.com/ArgeekBrambo/wanderia#readme",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "openai": "^3.1.0"
-  }
+    "name": "wanderia",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node app.js",
+        "dev": "nodemon app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ArgeekBrambo/wanderia.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ArgeekBrambo/wanderia/issues"
+    },
+    "homepage": "https://github.com/ArgeekBrambo/wanderia#readme",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.3",
+        "express": "^4.18.2",
+        "intl-messageformat": "^10.3.0",
+        "openai": "^3.1.0"
+    }
 }

@@ -8,7 +8,7 @@ class UserController {
             const data = await Partner.create({ name, email, password });
             res.status(201).json(data);
         } catch (error) {
-            console.log(error);
+            next(error);
         }
     }
 
@@ -31,11 +31,11 @@ class UserController {
                 throw { name: `InvalidCredentials` };
             }
             const payload = { id: partner.id, name: partner.name };
-            const accessToken = createToken(payload);
+            const access_token = createToken(payload);
 
-            res.status(200).json({ accessToken });
+            res.status(200).json({ access_token });
         } catch (error) {
-            console.log(error);
+            next(error);
         }
     }
 }

@@ -1,0 +1,35 @@
+type Preferences {
+  _id: ID
+  name: String
+  createdAt: String
+  updatedAt: String
+}
+
+input NewPreferences {
+  name: String
+}
+
+input UpdatePreferences {
+  _id: ID!
+  name: String
+}
+
+# input UpdateUserRole {
+#   _id: ID!
+#   role: String!
+# }
+
+type Message {
+  code: Int
+  message: String!
+}
+
+type Query {
+  getAllPreferences: [Preferences]
+}
+
+type Mutation {
+  registerNewPreferences(input: NewPreferences): Preferences
+  UpdatePreferences(input: UpdatePreferences): Preferences
+  deletePreferencesById(_id: ID): Message
+}

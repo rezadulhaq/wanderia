@@ -1,86 +1,92 @@
-import React, {
-  useState,
-  useEffect,
-  useLayoutEffect,
-  useCallback
-} from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { View, Text, TouchableOpacity } from "react-native";
+import React, { useState, useLayoutEffect, useCallback } from "react";
+import * as Icons from "@expo/vector-icons";
+import { GiftedChat } from "react-native-gifted-chat";
 import {
-  collection,
-  addDoc,
-  orderBy,
-  query,
-  onSnapshot
-} from 'firebase/firestore';
-import { signOut } from 'firebase/auth';
-import { auth, database } from '../../config/firebase';
-import { useNavigation } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
-import colors from '../../colors';
+    collection,
+    addDoc,
+    orderBy,
+    query,
+    onSnapshot,
+} from "firebase/firestore";
+import { auth, database } from "../../config/firebase";
+import { useNavigation } from "@react-navigation/native";
 
-const ChatScreen = () => {
-  const [messages, setMessages] = useState([])
-  const navigation = useNavigation()
+const DirectChatScreen = ({ route }) => {
+    console.log("route", route);
+    const navigator = useNavigation();
+    const [messages, setMessages] = useState([]);
+    const { username } = route.params;
+    const collectionName =
+        auth?.currentUser?.displayName < username
+            ? auth?.currentUser?.displayName + username
+            : username + auth?.currentUser?.displayName;
 
-  const onSignOut = () => {
-    signOut(auth).catch((error) => alert(error.message))
-  }
+    useLayoutEffect(() => {
+        const collectionRef = collection(database, collectionName);
+        const q = query(collectionRef, orderBy("createdAt", "desc"));
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          style={{
-            marginRight: 10
-          }}
-          onPress={onSignOut}
-        >
-          <AntDesign name="logout" size={24} color={colors.gray} style={{marginRight: 10}}/>
-        </TouchableOpacity>
-      )
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            setMessages(
+                snapshot.docs.map((doc) => ({
+                    _id: doc.id,
+                    createdAt: doc.data().createdAt.toDate(),
+                    text: doc.data().text,
+                    user: doc.data().user,
+                }))
+            );
+        });
+        return () => unsubscribe();
+    }, []);
+
+    const onSend = useCallback((messages = []) => {
+        setMessages((previousMessages) =>
+            GiftedChat.append(previousMessages, messages)
+        );
+        const { _id, createdAt, text, user } = messages[0];
+        addDoc(collection(database, collectionName), {
+            _id,
+            createdAt,
+            text,
+            user,
+        });
     });
-  }, [navigation]);
 
-  useLayoutEffect(()=>{
-    const collectionRef = collection(database, 'chats')
-    const q = query(collectionRef, orderBy('createdAt', 'desc'))
+    return (
+        <View className="pt-10 flex-1 gap-0">
+            {/* Header */}
+            <View className=" h-14 flex-row items-center justify-between p-4">
+                <TouchableOpacity
+                    className="w-8 h-8 items-center justify-center"
+                    onPress={navigator.goBack}
+                >
+                    <Icons.Feather name="arrow-left" className="text-2xl" />
+                </TouchableOpacity>
+                <View className="">
+                    <Text className="text-xl font-semibold">@{username}</Text>
+                </View>
+                <View className="w-8 h-8">
+                    {/* Hollow space to make space-between */}
+                </View>
+            </View>
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      setMessages(snapshot.docs.map(doc => ({
-        _id: doc.id,
-        createdAt: doc.data().createdAt,
-        text: doc.data().text,
-        user: doc.data().user
-      })))
-    })
-    return () => unsubscribe()
-  },[]) 
+            {/* Chats */}
+            <View className="flex-1 w-full bg-white">
+                <GiftedChat
+                    messages={messages}
+                    onSend={(messages) => onSend(messages)}
+                    user={{
+                        _id: auth?.currentUser?.email,
+                        avatar: auth?.currentUser?.photoURL,
+                    }}
+                    messagesContainerStyle={{
+                        backgroundColor: "#fff",
+                    }}
+                    bottomOffset={40}
+                />
+            </View>
+        </View>
+    );
+};
 
-  const onSend = useCallback((messages = []) => {
-    setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
-    const { _id, createdAt, text, user } = messages[0]
-    addDoc(collection(database, 'chats'), {
-      _id,
-      createdAt,
-      text,
-      user
-    })
-  })
-
-  return (
-    <GiftedChat 
-      messages={messages}
-      onSend={messages => onSend(messages)}
-      user={{
-        _id: auth?.currentUser?.email,
-        avatar: 'https://i.pravatar.cc/300'
-      }}
-      messagesContainerStyle={{
-        backgroundColor: '#fff'
-      }}
-    />
-  )
-}
-
-export default ChatScreen
+export default DirectChatScreen;

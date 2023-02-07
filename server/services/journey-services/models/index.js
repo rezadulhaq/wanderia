@@ -17,9 +17,9 @@ class Route {
         }
     }
 
-    static async findOne(_id) {
+    static async findOne(UserId) {
         try {
-            return await this.route.findOne({ _id })
+            return await this.route.find({ UserId }).toArray()
         } catch (error) {
             throw error
         }
