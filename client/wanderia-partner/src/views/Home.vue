@@ -9,11 +9,9 @@ import { PARTNERS_BUSINESS_QUERY } from "../stores/queries";
 export default {
   name: "Home",
   setup() {
-    // console.log(localStorage.getItem("access_token"));
     const { result, loading, error } = useQuery(PARTNERS_BUSINESS_QUERY, {
       access_token: localStorage.getItem("access_token"),
     });
-    // console.log(result.partnerBusiness);
     return {
       result,
       loading,

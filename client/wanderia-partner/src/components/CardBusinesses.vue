@@ -19,7 +19,9 @@ export default {
           </p>
         </div>
         <div class="d-flex justify-content-end">
-          <a href="#" class="btn btn-primary me-3 btn-lg">Detail</a>
+          <RouterLink :to="`/business/${business.id}`">
+            <a href="#" class="btn btn-primary me-3 btn-lg">Detail</a>
+          </RouterLink>
           <a href="#" class="btn btn-primary btn-lg">Edit</a>
         </div>
       </div>

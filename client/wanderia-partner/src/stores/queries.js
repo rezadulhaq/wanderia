@@ -33,3 +33,20 @@ export const PARTNERS_BUSINESS_QUERY = gql`
     }
   }
 `;
+
+export const ONE_BUSINESS = gql`
+  query Query($onePartnerBusinessId: ID) {
+    onePartnerBusiness(id: $onePartnerBusinessId) {
+      id
+      name
+      latitude
+      longitude
+      description
+      mapUrl
+      CategoryId
+      PartnerId
+      status
+      imageUrl
+  }
+}
+`

@@ -8,21 +8,22 @@ const partnerBusinessTypeDefs = `#graphql
         latitude: Float,
         longitude: Float,
         description: String,
-        mapUrl: String,
         CategoryId: Int,
         PartnerId: Int,
         status: String,
-        imageUrl: String
+        imageUrl: Text,
+        rating: String
     }
 
     input NewPartnerBusiness {
         name: String,
-        description: String,
         CategoryId: Int,
         mapUrl: String,
-        PartnerId: Int,
-        imageUrl: String,
-        access_token: String
+        imageUrl: Text,
+        price: Int,
+        rating: String,
+        address: String,
+        status: String
     }
 
     type Message {
@@ -39,15 +40,10 @@ const partnerBusinessTypeDefs = `#graphql
         access_token: String
     }
 
-    input IdForOneBusiness {
-        id: Int,
-        access_token: String
-    }
-
     type Query {
         allPartnerBusiness: [PartnerBusiness],
         partnerBusiness(access_token: String): [PartnerBusiness]
-        onePartnerBusiness(input: IdForOneBusiness): PartnerBusiness
+        onePartnerBusiness(id: ID): PartnerBusiness
         detailBusiness(id: ID): PartnerBusiness
     }
 
@@ -82,7 +78,6 @@ const partnerBusinessResolver = {
         },
         partnerBusiness: async (_, args) => {
             try {
-                console.log(args);
                 const { access_token } = args;
                 const { data } = await axios({
                     method: "GET",
@@ -98,13 +93,10 @@ const partnerBusinessResolver = {
         },
         onePartnerBusiness: async (_, args) => {
             try {
-                const { id, access_token } = args.input;
+                const { id } = args;
                 const { data } = await axios({
                     method: "GET",
                     url: `${process.env.PARTNER_URL}/business/${id}`,
-                    headers: {
-                        access_token,
-                    },
                 });
                 return data;
             } catch (error) {

@@ -4,10 +4,11 @@ const redis = require("../configs/ioredis");
 const routeTypeDefs = `#graphql
     type Route {
         _id: ID,
-        UserId: Int,
-        routeNumber: Int,
-        BussinessId: Int,
-        destination: String
+        name: String,
+        latitude: Float,
+        longitude: Float,
+        address: String,
+        tripId: String
     }
 
     type Message {
@@ -17,13 +18,11 @@ const routeTypeDefs = `#graphql
     input NewRoute {
         placeOfOrigin: String,
         destination: String,
-        BussinessId: Int,
-        UserId: Int
     }
 
     type Query {
         allRoutes: [Route],
-        allRoutesEachOneTrip(UserId: Int): [Route]
+        allRoutesEachOneTrip(tripId: Int): [Route]
     }
 
     type Mutation {
@@ -50,9 +49,9 @@ const routeResolver = {
         },
         allRoutesEachOneTrip: async (_, args) => {
             try {
-                const { UserId } = args
+                const { tripId } = args
                 const { data } = await axios({
-                    url: `${process.env.JOURNEY_URL}/routes/${UserId}`,
+                    url: `${process.env.JOURNEY_URL}/routes/${tripId}`,
                 });
                 return data
             } catch (error) {
@@ -63,11 +62,11 @@ const routeResolver = {
     Mutation: {
         addNewTrip: async (_, args) => {
             try {
-                const { placeOfOrigin, destination, BussinessId, UserId } = args.input
+                const { placeOfOrigin, destination } = args.input
                 const response = await axios({
                     method: "POST",
                     url: `${process.env.JOURNEY_URL}/routes`,
-                    data: { placeOfOrigin, destination, BussinessId, UserId },
+                    data: { placeOfOrigin, destination },
                 })
                 await redis.del('routes')
                 return response.data

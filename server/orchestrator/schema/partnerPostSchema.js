@@ -9,7 +9,8 @@ const partnerPostTypeDef = `#graphql
         id: ID,
         name: String,
         imageUrl: String,
-        BusinessId: Int
+        BusinessId: Int,
+        link: Text
     }
 
     type Query {
@@ -20,7 +21,8 @@ const partnerPostTypeDef = `#graphql
         name: String,
         BusinessId: Int,
         access_token: String,
-        photo: String
+        photo: String,
+        link: Text
     }
 
     type Mutation {
